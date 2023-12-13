@@ -15,38 +15,62 @@ http_archive(
 )
 
 
-#Install bazel platform version 0.0.6
+### #Install bazel platform version 0.0.6
+### http_archive(
+###     name = "platforms",
+###     urls = [
+###         "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
+###         "https://github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
+###     ],
+###     sha256 = "5308fc1d8865406a49427ba24a9ab53087f17f5266a7aabbfc28823f3916e1ca",
+### )
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "platforms",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
-        "https://github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.8/platforms-0.0.8.tar.gz",
+        "https://github.com/bazelbuild/platforms/releases/download/0.0.8/platforms-0.0.8.tar.gz",
     ],
-    sha256 = "5308fc1d8865406a49427ba24a9ab53087f17f5266a7aabbfc28823f3916e1ca",
+    sha256 = "8150406605389ececb6da07cbcb509d5637a3ab9a24bc69b1101531367d89d74",
 )
 
-# Install version 0.9.0 of rules_foreign_cc, as default version causes an
-# invalid escape sequence error to be raised, which can't be avoided with
-# the --incompatible_restrict_string_escapes=false flag (flag was removed in
-# Bazel 5.0).
-RULES_FOREIGN_CC_VERSION = "0.9.0"
+### # Install version 0.9.0 of rules_foreign_cc, as default version causes an
+### # invalid escape sequence error to be raised, which can't be avoided with
+### # the --incompatible_restrict_string_escapes=false flag (flag was removed in
+### # Bazel 5.0).
+### RULES_FOREIGN_CC_VERSION = "0.9.0"
+### http_archive(
+###     name = "rules_foreign_cc",
+###     sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
+###     strip_prefix = "rules_foreign_cc-%s" % RULES_FOREIGN_CC_VERSION,
+###     url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/%s.tar.gz" % RULES_FOREIGN_CC_VERSION,
+###     patch_tool = "patch",
+###     patches = ["//ml_metadata/third_party:rules_foreign_cc.patch",],
+### )
+###
+### load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+### rules_foreign_cc_dependencies()
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "rules_foreign_cc",
-    sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
-    strip_prefix = "rules_foreign_cc-%s" % RULES_FOREIGN_CC_VERSION,
-    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/%s.tar.gz" % RULES_FOREIGN_CC_VERSION,
-    patch_tool = "patch",
-    patches = ["//ml_metadata/third_party:rules_foreign_cc.patch",],
+    sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
+    strip_prefix = "rules_foreign_cc-0.10.1",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/releases/download/0.10.1/rules_foreign_cc-0.10.1.tar.gz",
 )
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
+
+# This sets up some common toolchains for building targets. For more details, please see
+# https://bazelbuild.github.io/rules_foreign_cc/0.10.1/flatten.html#rules_foreign_cc_dependencies
 rules_foreign_cc_dependencies()
 
-# lts_20230125.3
-ABSL_COMMIT = "c2435f8342c2d0ed8101cb43adfd605fdc52dca2"
+### # lts_20230125.3
+### ABSL_COMMIT = "c2435f8342c2d0ed8101cb43adfd605fdc52dca2"
+ABSL_COMMIT = "fb3621f4f897824c0dbe0615fa94543df6192f30" # https://github.com/abseil/abseil-cpp/releases/tag/20230802.1
 http_archive(
     name = "com_google_absl",
-    sha256 = "9892836ab0d3f099b8c15076c6f4168144f452d097bd49da215fe0df36a2d48c",
+    ### sha256 = "9892836ab0d3f099b8c15076c6f4168144f452d097bd49da215fe0df36a2d48c",
     strip_prefix = "abseil-cpp-%s" % ABSL_COMMIT,
     urls = [
         "https://github.com/abseil/abseil-cpp/archive/%s.tar.gz" % ABSL_COMMIT,
@@ -157,8 +181,9 @@ http_archive(
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
 grpc_deps()
 
-load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
-grpc_extra_deps()
+### Done by https://github.com/google/zetasql/blob/2023.11.1/bazel/zetasql_deps_step_4.bzl
+### load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+### grpc_extra_deps()
 
 # Needed by Protobuf.
 bind(
@@ -190,7 +215,7 @@ go_repository(
 
 go_rules_dependencies()
 
-go_register_toolchains()
+### go_register_toolchains()
 
 gazelle_dependencies()
 
@@ -203,13 +228,15 @@ http_archive(
     url = "https://github.com/gflags/gflags/archive/a738fdf9338412f83ab3f26f31ac11ed3f3ec4bd.zip",
 )
 
-ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/10/2022
+### ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/10/2022
+ZETASQL_TAG = "2023.11.1" #
+
 http_archive(
     name = "com_google_zetasql",
-    urls = ["https://github.com/google/zetasql/archive/%s.zip" % ZETASQL_COMMIT],
-    strip_prefix = "zetasql-%s" % ZETASQL_COMMIT,
+    strip_prefix = "zetasql-%s" % ZETASQL_TAG,
+    urls = ["https://github.com/google/zetasql/archive/refs/tags/%s.zip" % ZETASQL_TAG],
     #patches = ["//ml_metadata/third_party:zetasql.patch"],
-    sha256 = '651a768cd51627f58aa6de7039aba9ddab22f4b0450521169800555269447840'
+    sha256 = 'a97945622a301f1b10142c2eac1590b55654c9027b6bc02090db22832b18af19'
 )
 
 load("@com_google_zetasql//bazel:zetasql_deps_step_1.bzl", "zetasql_deps_step_1")
@@ -222,14 +249,17 @@ zetasql_deps_step_2(
     java_deps = False,
     testing_deps = False)
 
-# This is part of what zetasql_deps_step_3() does.
-load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
-switched_rules_by_language(
-    name = "com_google_googleapis_imports",
-    cc = True,
-)
+load("@com_google_zetasql//bazel:zetasql_deps_step_3.bzl", "zetasql_deps_step_3")
+zetasql_deps_step_3()
+load("@com_google_zetasql//bazel:zetasql_deps_step_4.bzl", "zetasql_deps_step_4")
+zetasql_deps_step_4()
 
-
+### # This is part of what zetasql_deps_step_3() does.
+### load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+### switched_rules_by_language(
+###    name = "com_google_googleapis_imports",
+###    cc = True,
+###)
 
 # Please add all new ML Metadata dependencies in workspace.bzl.
 load("//ml_metadata:workspace.bzl", "ml_metadata_workspace")
