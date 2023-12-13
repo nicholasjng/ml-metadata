@@ -181,9 +181,8 @@ http_archive(
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
 grpc_deps()
 
-### Done by https://github.com/google/zetasql/blob/2023.11.1/bazel/zetasql_deps_step_4.bzl
-### load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
-### grpc_extra_deps()
+load("@com_github_grpc_grpc//bazel:grpc_extra_deps.bzl", "grpc_extra_deps")
+grpc_extra_deps()
 
 # Needed by Protobuf.
 bind(
