@@ -228,15 +228,18 @@ http_archive(
     url = "https://github.com/gflags/gflags/archive/a738fdf9338412f83ab3f26f31ac11ed3f3ec4bd.zip",
 )
 
-### ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/10/2022
-ZETASQL_TAG = "2023.11.1" #
 
+
+################################################################################
+# ZetaSQL                                                                      #
+################################################################################
+
+ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/11/2022
 http_archive(
     name = "com_google_zetasql",
-    strip_prefix = "zetasql-%s" % ZETASQL_TAG,
-    urls = ["https://github.com/google/zetasql/archive/refs/tags/%s.zip" % ZETASQL_TAG],
-    #patches = ["//ml_metadata/third_party:zetasql.patch"],
-    sha256 = 'a97945622a301f1b10142c2eac1590b55654c9027b6bc02090db22832b18af19'
+    urls = ["https://github.com/google/zetasql/archive/%s.zip" % ZETASQL_COMMIT],
+    strip_prefix = "zetasql-%s" % ZETASQL_COMMIT,
+    sha256 = "651a768cd51627f58aa6de7039aba9ddab22f4b0450521169800555269447840",
 )
 
 load("@com_google_zetasql//bazel:zetasql_deps_step_1.bzl", "zetasql_deps_step_1")
@@ -249,17 +252,17 @@ zetasql_deps_step_2(
     java_deps = False,
     testing_deps = False)
 
-load("@com_google_zetasql//bazel:zetasql_deps_step_3.bzl", "zetasql_deps_step_3")
-zetasql_deps_step_3()
-load("@com_google_zetasql//bazel:zetasql_deps_step_4.bzl", "zetasql_deps_step_4")
-zetasql_deps_step_4()
+# This is part of what zetasql_deps_step_3() does.
 
-### # This is part of what zetasql_deps_step_3() does.
-### load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
-### switched_rules_by_language(
-###    name = "com_google_googleapis_imports",
-###    cc = True,
-###)
+load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+switched_rules_by_language(
+    name = "com_google_googleapis_imports",
+    cc = True,
+)
+
+################################################################################
+# end of ZetaSQL                                                                      #
+################################################################################
 
 # Please add all new ML Metadata dependencies in workspace.bzl.
 load("//ml_metadata:workspace.bzl", "ml_metadata_workspace")
