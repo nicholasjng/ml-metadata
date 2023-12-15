@@ -61,8 +61,6 @@ http_archive(
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 
-# This sets up some common toolchains for building targets. For more details, please see
-# https://bazelbuild.github.io/rules_foreign_cc/0.10.1/flatten.html#rules_foreign_cc_dependencies
 rules_foreign_cc_dependencies()
 
 ### # lts_20230125.3
@@ -214,7 +212,7 @@ go_repository(
 
 go_rules_dependencies()
 
-### go_register_toolchains()
+go_register_toolchains()
 
 gazelle_dependencies()
 
@@ -226,12 +224,6 @@ http_archive(
     sha256 = "017e0a91531bfc45be9eaf07e4d8fed33c488b90b58509dbd2e33a33b2648ae6",
     url = "https://github.com/gflags/gflags/archive/a738fdf9338412f83ab3f26f31ac11ed3f3ec4bd.zip",
 )
-
-
-
-################################################################################
-# ZetaSQL                                                                      #
-################################################################################
 
 ZETASQL_COMMIT = "ac37cf5c0d80b5605176fc0f29e87b12f00be693" # 08/10/2022
 http_archive(
@@ -258,10 +250,6 @@ switched_rules_by_language(
     name = "com_google_googleapis_imports",
     cc = True,
 )
-
-################################################################################
-# end of ZetaSQL                                                                      #
-################################################################################
 
 # Please add all new ML Metadata dependencies in workspace.bzl.
 load("//ml_metadata:workspace.bzl", "ml_metadata_workspace")
