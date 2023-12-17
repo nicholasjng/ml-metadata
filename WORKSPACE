@@ -15,38 +15,30 @@ http_archive(
 )
 
 
-#Install bazel platform version 0.0.6
 http_archive(
     name = "platforms",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
-        "https://github.com/bazelbuild/platforms/releases/download/0.0.6/platforms-0.0.6.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/platforms/releases/download/0.0.8/platforms-0.0.8.tar.gz",
+        "https://github.com/bazelbuild/platforms/releases/download/0.0.8/platforms-0.0.8.tar.gz",
     ],
-    sha256 = "5308fc1d8865406a49427ba24a9ab53087f17f5266a7aabbfc28823f3916e1ca",
+    sha256 = "8150406605389ececb6da07cbcb509d5637a3ab9a24bc69b1101531367d89d74",
 )
 
-# Install version 0.9.0 of rules_foreign_cc, as default version causes an
-# invalid escape sequence error to be raised, which can't be avoided with
-# the --incompatible_restrict_string_escapes=false flag (flag was removed in
-# Bazel 5.0).
-RULES_FOREIGN_CC_VERSION = "0.9.0"
+RULES_FOREIGN_CC_VERSION = "0.10.1"
 http_archive(
     name = "rules_foreign_cc",
-    sha256 = "2a4d07cd64b0719b39a7c12218a3e507672b82a97b98c6a89d38565894cf7c51",
+    sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
     strip_prefix = "rules_foreign_cc-%s" % RULES_FOREIGN_CC_VERSION,
+    #url = "https://github.com/bazelbuild/rules_foreign_cc/releases/download/0.10.1/rules_foreign_cc-0.10.1.tar.gz",
     url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/%s.tar.gz" % RULES_FOREIGN_CC_VERSION,
-    patch_tool = "patch",
-    patches = ["//ml_metadata/third_party:rules_foreign_cc.patch",],
 )
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 rules_foreign_cc_dependencies()
 
-# lts_20230125.3
-ABSL_COMMIT = "c2435f8342c2d0ed8101cb43adfd605fdc52dca2"
+ABSL_COMMIT = "fb3621f4f897824c0dbe0615fa94543df6192f30" # https://github.com/abseil/abseil-cpp/releases/tag/20230802.1
 http_archive(
     name = "com_google_absl",
-    sha256 = "9892836ab0d3f099b8c15076c6f4168144f452d097bd49da215fe0df36a2d48c",
     strip_prefix = "abseil-cpp-%s" % ABSL_COMMIT,
     urls = [
         "https://github.com/abseil/abseil-cpp/archive/%s.tar.gz" % ABSL_COMMIT,
@@ -208,7 +200,6 @@ http_archive(
     name = "com_google_zetasql",
     urls = ["https://github.com/google/zetasql/archive/%s.zip" % ZETASQL_COMMIT],
     strip_prefix = "zetasql-%s" % ZETASQL_COMMIT,
-    #patches = ["//ml_metadata/third_party:zetasql.patch"],
     sha256 = '651a768cd51627f58aa6de7039aba9ddab22f4b0450521169800555269447840'
 )
 
@@ -228,8 +219,6 @@ switched_rules_by_language(
     name = "com_google_googleapis_imports",
     cc = True,
 )
-
-
 
 # Please add all new ML Metadata dependencies in workspace.bzl.
 load("//ml_metadata:workspace.bzl", "ml_metadata_workspace")
