@@ -41,24 +41,22 @@ http_archive(
 ### load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 ### rules_foreign_cc_dependencies()
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+RULES_FOREIGN_CC_VERSION = "0.10.1"
 http_archive(
     name = "rules_foreign_cc",
     sha256 = "476303bd0f1b04cc311fc258f1708a5f6ef82d3091e53fd1977fa20383425a6a",
-    strip_prefix = "rules_foreign_cc-0.10.1",
-    url = "https://github.com/bazelbuild/rules_foreign_cc/releases/download/0.10.1/rules_foreign_cc-0.10.1.tar.gz",
+    strip_prefix = "rules_foreign_cc-%s" % RULES_FOREIGN_CC_VERSION,
+    #url = "https://github.com/bazelbuild/rules_foreign_cc/releases/download/0.10.1/rules_foreign_cc-0.10.1.tar.gz",
+    url = "https://github.com/bazelbuild/rules_foreign_cc/archive/refs/tags/%s.tar.gz" % RULES_FOREIGN_CC_VERSION,
 )
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-
 rules_foreign_cc_dependencies()
 
-### # lts_20230125.3
-### ABSL_COMMIT = "c2435f8342c2d0ed8101cb43adfd605fdc52dca2"
 ABSL_COMMIT = "fb3621f4f897824c0dbe0615fa94543df6192f30" # https://github.com/abseil/abseil-cpp/releases/tag/20230802.1
 http_archive(
     name = "com_google_absl",
-    ### sha256 = "9892836ab0d3f099b8c15076c6f4168144f452d097bd49da215fe0df36a2d48c",
     strip_prefix = "abseil-cpp-%s" % ABSL_COMMIT,
     urls = [
         "https://github.com/abseil/abseil-cpp/archive/%s.tar.gz" % ABSL_COMMIT,
